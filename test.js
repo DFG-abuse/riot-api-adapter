@@ -7,44 +7,33 @@ var util = require('util');
 var Api = require('./index');
 var config = require('./.env/config');
 let connection = new Api(config.key);
-/*co(function*(){
+function stack(x){
+    console.log(x.stack);
+}
+
+/*
+ * Нагрузочный тест.
+ */
+let cntr = 0;
+function* req() {
     let results = yield Promise.all([
+        connection.summoner(config.region,config.summonerIds),
         connection.summoner_byName(config.region,config.summonerNames),
         connection.summoner_runes(config.region,config.summonerIds),
         connection.summoner_masteries(config.region,config.summonerIds),
-        connection.summoner(config.region,config.summonerIds),
-        connection.summoner_name(config.region,config.summonerIds),
-        connection.summoner_name(config.region,config.summonerIds),
-        connection.summoner_name(config.region,config.summonerIds),
-        connection.summoner_name(config.region,config.summonerIds),
-        connection.summoner_name(config.region,config.summonerIds),
-        connection.summoner_name(config.region,config.summonerIds),
         connection.summoner_name(config.region,config.summonerIds),
         connection.league_entry(config.region,config.summonerIds)
-
     ]);
-    console.log(results);
-}).catch(function(x){
-    console.log(x.stack);
-});
-*/
-let RL = require('./lib/RateLimiter');
-let rl = new RL({
-    interval:10000,
-    maxInInterval: 10
-});
-let cntr = 0;
+    //console.log(results);
+
+    console.log(++cntr, JSON.stringify(results).length);
+    if((cntr*6) % 1000 <= 6){
+        console.log("\n\n",cntr*6,"requests in",connection.scheduler.running(),"ms","\n\n");
+    }
+}
 setInterval(function(){
     for(let i = 0;i<11;i++){
-        co(function*() {
-            if(rl.check("id").ok){
-                let result = yield connection.summoner_byName(config.region, config.summonerNames);
-                console.log(++cntr, Object.keys( result));
-            }
-        }).catch(function(x){
-            console.log(x.stack);
-        });
-
+        co(req).catch(stack);
     }
 },1000);
 

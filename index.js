@@ -7,12 +7,12 @@ let tools = require('./lib/tools');
 function Api(key){
     this.key = key;
     this.scheduler = new Scheduler([
-        {// 10 запросов за 10 секунд
-            "requests": 10,
-            "interval": 10000
-        },{// 500 запросов за 10 минут
-            "requests": 500,
-            "interval": 60*10000
+        {
+            interval:10000,
+            maxInInterval: 10
+        },{
+            interval:60*10000,
+            maxInInterval: 500
         }
     ]);
 }
