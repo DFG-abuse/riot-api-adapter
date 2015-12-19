@@ -4,6 +4,7 @@
  */
 let Scheduler = require('./lib/Scheduler');
 let tools = require('./lib/tools');
+let assert = require('assert');
 function Api(key){
     this.key = key;
     this.scheduler = new Scheduler([
@@ -89,6 +90,65 @@ Api.prototype.league_entry = function(region, summonerIds){
         "api": PARENT_API,
         "value" : summonerIds,
         "post_api" : "entry",
+        "pre_api" : "by-summoner",
+        "key":this.key
+    });
+    return new Promise(tools.getBasicExecutor(this.scheduler, uri));
+};
+Api.prototype.stats_summary = function(region, summonerId){
+    assert(typeof summonerId === 'number');
+    const PARENT_API = "stats";
+    summonerId = tools.standardize(summonerId);
+    let uri = tools.makeURI({
+        "region" : region,
+        "version" : tools.getVersion(PARENT_API),
+        "api": PARENT_API,
+        "value" : summonerId,
+        "pre_api" : "by-summoner",
+        "post_api" : "summary",
+        "key":this.key
+    });
+    return new Promise(tools.getBasicExecutor(this.scheduler, uri));
+};
+Api.prototype.stats_ranked = function(region, summonerId){
+    assert(typeof summonerId === 'number');
+    const PARENT_API = "stats";
+    summonerId = tools.standardize(summonerId);
+    let uri = tools.makeURI({
+        "region" : region,
+        "version" : tools.getVersion(PARENT_API),
+        "api": PARENT_API,
+        "value" : summonerId,
+        "pre_api" : "by-summoner",
+        "post_api" : "ranked",
+        "key":this.key
+    });
+    return new Promise(tools.getBasicExecutor(this.scheduler, uri));
+};
+Api.prototype.game_recent = function(region, summonerId){
+    assert(typeof summonerId === 'number');
+    const PARENT_API = "game";
+    summonerId = tools.standardize(summonerId);
+    let uri = tools.makeURI({
+        "region" : region,
+        "version" : tools.getVersion(PARENT_API),
+        "api": PARENT_API,
+        "value" : summonerId,
+        "pre_api" : "by-summoner",
+        "post_api" : "recent",
+        "key":this.key
+    });
+    return new Promise(tools.getBasicExecutor(this.scheduler, uri));
+};
+Api.prototype.matchlist= function(region, summonerId){
+    assert(typeof summonerId === 'number');
+    const PARENT_API = "matchlist";
+    summonerId = tools.standardize(summonerId);
+    let uri = tools.makeURI({
+        "region" : region,
+        "version" : tools.getVersion(PARENT_API),
+        "api": PARENT_API,
+        "value" : summonerId,
         "pre_api" : "by-summoner",
         "key":this.key
     });
