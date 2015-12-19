@@ -17,16 +17,16 @@ function stack(x){
 let cntr = 0;
 function* req() {
     let results = yield Promise.all([
-        connection.summoner(config.region,config.summonerIds[0]),
-        connection.summoner_byName(config.region,config.summonerNames[0]),
-        connection.summoner_runes(config.region,config.summonerIds),
-        connection.summoner_masteries(config.region,config.summonerIds),
-        connection.summoner_name(config.region,config.summonerIds[0]),
-        connection.league_entry(config.region,config.summonerIds[0]),
-        connection.stats_summary(config.region,config.summonerIds[0]),
-        connection.stats_ranked(config.region,config.summonerIds[0]),
+        connection.summoner.get(config.region,config.summonerIds[0]),
+        connection.summoner.byName(config.region,config.summonerNames[0]),
+        connection.summoner.runes(config.region,config.summonerIds[0]),
+        connection.summoner.masteries(config.region,config.summonerIds),
+        connection.summoner.name(config.region,config.summonerIds[0]),
+        connection.league.entry(config.region,config.summonerIds[0]),
+        connection.stats.summary(config.region,config.summonerIds[0]),
+        connection.stats.ranked(config.region,config.summonerIds[0]),
         connection.matchlist(config.region,config.summonerIds[0]),
-        connection.game_recent(config.region,config.summonerIds[0])
+        connection.game.recent(config.region,config.summonerIds[0])
     ]);
     //console.log(results);
     let json = JSON.stringify(results);

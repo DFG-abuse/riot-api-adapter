@@ -16,8 +16,26 @@ function Api(key){
             maxInInterval: 500
         }
     ]);
+    this.summoner = {
+        "get" : summoner.bind(this),
+        "byName" : summoner_byName.bind(this),
+        "masteries" : summoner_masteries.bind(this),
+        "name" : summoner_name.bind(this),
+        "runes" : summoner_runes.bind(this)
+    };
+    this.league = {
+        "entry" : league_entry.bind(this)
+    };
+    this.stats = {
+        "summary": stats_summary.bind(this),
+        "ranked": stats_ranked.bind(this)
+    };
+    this.game = {
+        "recent" : game_recent.bind(this)
+    };
+    this.matchlist = matchlist.bind(this);
 }
-Api.prototype.summoner_byName = function(region, summonerNames){
+function summoner_byName(region, summonerNames){
     const PARENT_API = "summoner";
     summonerNames = tools.standardize(summonerNames);
     let uri = tools.makeURI({
@@ -29,8 +47,8 @@ Api.prototype.summoner_byName = function(region, summonerNames){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.summoner = function(region, summonerIds){
+}
+function summoner(region, summonerIds){
     const PARENT_API = "summoner";
     summonerIds = tools.standardize(summonerIds);
     let uri = tools.makeURI({
@@ -41,8 +59,8 @@ Api.prototype.summoner = function(region, summonerIds){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.summoner_masteries = function(region, summonerIds){
+}
+function summoner_masteries(region, summonerIds){
     const PARENT_API = "summoner";
     summonerIds = tools.standardize(summonerIds);
     let uri = tools.makeURI({
@@ -54,8 +72,8 @@ Api.prototype.summoner_masteries = function(region, summonerIds){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.summoner_name = function(region, summonerIds){
+}
+function summoner_name(region, summonerIds){
     const PARENT_API = "summoner";
     summonerIds = tools.standardize(summonerIds);
     let uri = tools.makeURI({
@@ -67,8 +85,8 @@ Api.prototype.summoner_name = function(region, summonerIds){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.summoner_runes = function(region, summonerIds){
+}
+function summoner_runes(region, summonerIds){
     const PARENT_API = "summoner";
     summonerIds = tools.standardize(summonerIds);
     let uri = tools.makeURI({
@@ -80,8 +98,8 @@ Api.prototype.summoner_runes = function(region, summonerIds){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.league_entry = function(region, summonerIds){
+}
+function league_entry(region, summonerIds){
     const PARENT_API = "league";
     summonerIds = tools.standardize(summonerIds);
     let uri = tools.makeURI({
@@ -94,8 +112,8 @@ Api.prototype.league_entry = function(region, summonerIds){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.stats_summary = function(region, summonerId){
+}
+function stats_summary(region, summonerId){
     assert(typeof summonerId === 'number');
     const PARENT_API = "stats";
     summonerId = tools.standardize(summonerId);
@@ -109,8 +127,8 @@ Api.prototype.stats_summary = function(region, summonerId){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.stats_ranked = function(region, summonerId){
+}
+function stats_ranked(region, summonerId){
     assert(typeof summonerId === 'number');
     const PARENT_API = "stats";
     summonerId = tools.standardize(summonerId);
@@ -124,8 +142,8 @@ Api.prototype.stats_ranked = function(region, summonerId){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.game_recent = function(region, summonerId){
+}
+function game_recent(region, summonerId){
     assert(typeof summonerId === 'number');
     const PARENT_API = "game";
     summonerId = tools.standardize(summonerId);
@@ -139,8 +157,8 @@ Api.prototype.game_recent = function(region, summonerId){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
-Api.prototype.matchlist= function(region, summonerId){
+}
+function matchlist(region, summonerId){
     assert(typeof summonerId === 'number');
     const PARENT_API = "matchlist";
     summonerId = tools.standardize(summonerId);
@@ -153,5 +171,5 @@ Api.prototype.matchlist= function(region, summonerId){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
-};
+}
 module.exports = Api;
