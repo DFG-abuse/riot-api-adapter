@@ -5,6 +5,7 @@
 let Scheduler = require('./lib/Scheduler');
 let tools = require('./lib/tools');
 let assert = require('assert');
+let co = require('co');
 function Api(key){
     this.key = key;
     this.scheduler = new Scheduler([
@@ -34,6 +35,9 @@ function Api(key){
         "recent" : game_recent.bind(this)
     };
     this.matchlist = matchlist.bind(this);
+    this.batch = {
+        "basicSummonerInfo" : basicSummonerInfo.bind(this)
+    };
 }
 function summoner_byName(region, summonerNames){
     const PARENT_API = "summoner";
@@ -171,5 +175,60 @@ function matchlist(region, summonerId){
         "key":this.key
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
+}
+function basicSummonerInfo(region, summonerIdOrName){
+    assert(tools.REGIONS.indexOf(region) !== -1);
+    assert(summonerIdOrName !== undefined);
+    assert(this instanceof Api);
+    let connection = this;
+    return new Promise(function(resolve, reject){
+        co(function*(){
+            let summonerInfo;
+            switch (typeof summonerIdOrName) {
+                case 'number':{
+                    let raw = yield this.summoner.get(region, summonerIdOrName);
+                    for (let i in raw) {
+                        if(!raw.hasOwnProperty(i)) {
+                            continue;
+                        }
+                        if (raw[i].id === summonerIdOrName) {
+                            summonerInfo = raw[i];
+                        }
+                    }
+                    break;
+                }
+                case 'string':{
+                    summonerIdOrName = tools.standardize(summonerIdOrName);
+                    let raw = yield this.summoner.byName(region,summonerIdOrName);
+                    for(let i in raw){
+                        if(!raw.hasOwnProperty(i)) {
+                            continue;
+                        }
+                        if(raw[i].name === summonerIdOrName){
+                            summonerInfo = raw[i];
+                        }
+                    }
+                    break;
+                }
+                default :
+                    reject('summonerID must be rather string or number');
+            }
+            let id = summonerInfo.id;
+            let mapping = [
+                {prop: 'summary', 'func':  this.stats.summary},
+                {prop: 'ranked' , 'func': this.stats.ranked},
+                {prop: 'league' , 'func': this.league.entry}
+            ];
+            let promises  = mapping.map(function(v){
+                return co(function*(){
+                    summonerInfo[v.prop] = yield v.func(region,id);
+                }).catch(tools.stack);
+            }.bind(this));
+            Promise.all(promises).then(function(){
+                resolve(summonerInfo);
+            });
+        }.bind(connection)).catch(tools.stack);
+    });
+
 }
 module.exports = Api;

@@ -10,7 +10,6 @@ let connection = new Api(config.key);
 function stack(x){
     console.log(x.stack);
 }
-
 /*
  * Нагрузочный тест.
  */
@@ -28,7 +27,6 @@ function* req() {
         connection.matchlist(config.region,config.summonerIds[0]),
         connection.game.recent(config.region,config.summonerIds[0])
     ]);
-    //console.log(results);
     let json = JSON.stringify(results);
     console.log(++cntr, json.length);
     if(JSON.stringify(results).length === null){
@@ -40,8 +38,13 @@ function* req() {
 }
 setInterval(function(){
     for(let i = 0;i<11;i++){
-        co(req).catch(stack);
+        //co(req).catch(stack);
     }
 },1000);
+
+co(function*(){
+    let me = yield this.batch.basicSummonerInfo(config.region,config.summonerIds[1]);
+    console.log(util.inspect(me,{depth: null }));
+}.bind(connection));
 
 
