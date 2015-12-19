@@ -2,10 +2,10 @@
 /**
  * Created by lich on 2015-12-15.
  */
-var co = require('co');
-var util = require('util');
-var Api = require('./index');
-var config = require('./.env/config');
+let co = require('co');
+let util = require('util');
+let Api = require('./index');
+let config = require('./.env/config');
 let connection = new Api(config.key);
 function stack(x){
     console.log(x.stack);
