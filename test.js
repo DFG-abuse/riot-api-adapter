@@ -27,6 +27,9 @@ function* req() {
     //console.log(results);
 
     console.log(++cntr, JSON.stringify(results).length);
+    if(JSON.stringify(results).length === null){
+        console.log(results);
+    }
     if((cntr*6) % 1000 <= 6){
         console.log("\n\n",cntr*6,"requests in",connection.scheduler.running(),"ms","\n\n");
     }
