@@ -38,6 +38,7 @@ function Api(key){
     this.batch = {
         "basicSummonerInfo" : basicSummonerInfo.bind(this)
     };
+	this.standartize =  tools.standartize;
 }
 function summoner_byName(region, summonerNames){
     const PARENT_API = "summoner";
