@@ -36,15 +36,19 @@ function* req() {
         console.log("\n\n",cntr*results.length,"requests in",connection.scheduler.running(),"ms","\n\n");
     }
 }
-setInterval(function(){
-    for(let i = 0;i<11;i++){
-        //co(req).catch(stack);
-    }
-},1000);
+if(false){
+    setInterval(function(){
+        for(let i = 0;i<11;i++){
+            co(req).catch(stack);
+        }
+    },1000);
+}
 
 co(function*(){
-    let me = yield this.batch.basicSummonerInfo(config.region,config.summonerIds[1]);
-    console.log(util.inspect(me,{depth: null }));
-}.bind(connection));
+    let list = yield connection.matchlist(config.region, config.summonerIds[0], {
+        beginTime:1454024837510
+    });
+    console.log(list);
+}.bind(connection)).catch(stack);
 
 

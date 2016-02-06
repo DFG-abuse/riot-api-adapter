@@ -163,7 +163,7 @@ function game_recent(region, summonerId){
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
 }
-function matchlist(region, summonerId){
+function matchlist(region, summonerId, params){
     assert(typeof summonerId === 'number');
     const PARENT_API = "matchlist";
     summonerId = tools.standardize(summonerId);
@@ -173,7 +173,8 @@ function matchlist(region, summonerId){
         "api": PARENT_API,
         "value" : summonerId,
         "pre_api" : "by-summoner",
-        "key":this.key
+        "key":this.key,
+        "params":params
     });
     return new Promise(tools.getBasicExecutor(this.scheduler, uri));
 }
